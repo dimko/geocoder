@@ -14,7 +14,7 @@ module Geocoder::Lookup
     end
 
     def query_url(query)
-      "http://ipgeobase.ru:7020/geo?#{url_query_string(query)}"
+      "http://194.85.91.253:7020/geo?#{url_query_string(query)}"
     end
 
     private # ---------------------------------------------------------------
@@ -28,9 +28,9 @@ module Geocoder::Lookup
 
       if encoded_data.match(/Incorrect request|Not found/)
         return nil
-      else        
+      else
         ip = REXML::Document.new(encoded_data).elements['ip-answer/ip']
-              
+
         result = ip.elements.reduce({}){ |h, el| h[el.name] = el.text; h }
         result['ip'] = ip.attributes['value']
 
@@ -38,7 +38,7 @@ module Geocoder::Lookup
       end
     end
 
-    def results(query)      
+    def results(query)
       return [reserved_result(query.text)] if query.loopback_ip_address?
 
       begin
@@ -55,7 +55,7 @@ module Geocoder::Lookup
         'ip'          => ip,
         'country'     => 'RU',
         'city'        => '',
-        'district'    => '',       
+        'district'    => '',
         "lat"         => '0',
         "lng"         => '0'
       }
@@ -63,7 +63,7 @@ module Geocoder::Lookup
 
     def query_url_params(query)
       {
-        :ip => query.sanitized_text        
+        :ip => query.sanitized_text
       }
     end
   end
